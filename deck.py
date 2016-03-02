@@ -23,7 +23,7 @@ class Card(object):
 
     def __str__(self):
         """Returns a human-readable string representation."""
-        return '%s of %s' % (Card.rank_names[self.rank],
+        return '%s%s' % (Card.rank_names[self.rank],
                              Card.suit_names[self.suit])
 
     def __cmp__(self, other):
