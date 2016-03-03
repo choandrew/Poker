@@ -93,7 +93,12 @@ def parse_cards(card_strings):
 # Driver function which parses the command line arguments into hole cards,
 # instantiates data structures to hold the intermediate results of the
 # simulations, performs the simulations, and prints the results
-def main():
+def calculate(list_of_cards):
+
+
+    #list_of_cards should be of form [(r1,s1),(r2,s2),(r3,s3),(r4,s4)] etc
+    #where each tuple represents a card
+
 
     # Parse command line arguments into hole cards and create deck
     (hole_cards, num_iterations,
@@ -150,11 +155,3 @@ def main():
         for index, result in enumerate(result_list):
             result_histograms[index][result[0]] += 1
     prob_functions.print_results(hole_cards, winner_list)
-
-
-
-
-if __name__ == '__main__':
-    start = time.time()
-    main()
-    print("\nTime elapsed(seconds): ", time.time() - start)
