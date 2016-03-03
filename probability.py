@@ -1,108 +1,37 @@
 import argparse
 import re
-
+import deck
 import time
 import prob_functions
 
-
-def parse_args():
-    # Define possible command line arguments
-    parser = argparse.ArgumentParser(
-        description="Find the odds that a Texas Hold'em hand will win. Note "
-        "that cards must be given in the following format: As, Jc, Td, 3h.")
-
-    parser.add_argument("cards", type=str, nargs="*", metavar="hole card",
-        help="Hole cards you want to find the odds for.")
-
-    parser.add_argument("-b", "--board", nargs="*", type=str, metavar="card",
-        help="Add board cards")
-
-    parser.add_argument("-e", "--exact", action="store_true",
-        help="Find exact odds by enumerating every possible board")
-
-    parser.add_argument("-n", type=int, default=10000,
-        help="Run N Monte Carlo simulations")
-
-    # Parse command line arguments and check for errors
-    args = parser.parse_args()
-    error_check(args)
-
-    # Parse hole cards
-    hole_cards = parse_hole_cards(args.cards)
-    board = None
-
-    # Create the deck. If the user has defined a board, parse the board.
-    if args.board:
-        board = parse_cards(args.board)
-        all_cards = list(hole_cards)
-        all_cards.append(board)
-        deck = prob_functions.generate_deck(all_cards)
-    else:
-        deck = prob_functions.generate_deck(hole_cards)
-    return hole_cards, args.n, args.exact, board, deck
-
-
-# Error checking the command line arguments
-def error_check(args):
-    # Checking that the number of Monte Carlo simulations is a positive number
-    if args.n <= 0:
-        print("Number of Monte Carlo simulations must be positive.")
-        exit()
-    # Checking that there are an even number of hole cards
-    if len(args.cards) <= 0 or len(args.cards) % 2:
-        print(args.cards)
-        print("You must provide a non-zero even number of hole cards")
-        exit()
-    all_cards = list(args.cards)
-    # Checking that the board length is either 3 or 4 (flop or flop + turn)
-    if args.board:
-        if len(args.board) != 3 and len(args.board) != 4:
-            print("Board must have a length of 3 or 4.")
-            exit()
-        all_cards.extend(args.board)
-    # Checking that the hole cards + board are formatted properly and unique
-    card_re = re.compile('[AKQJT98765432][scdh]')
-    for card in all_cards:
-        if not card_re.match(card):
-            print("Invalid card given.")
-            exit()
-        else:
-            if all_cards.count(card) != 1:
-                print("The cards given must be unique.")
-                exit()
-
-
-# Returns tuple of two-tuple hole_cards: e.g. ((As, Ks), (Ad, Kd), (Jh, Th))
-def parse_hole_cards(hole_cards):
-    cards = parse_cards(hole_cards)
-    # Create two-tuples out of hole cards
-    hole_cards, current_hole_cards = [], []
-    for hole_card in cards:
-        current_hole_cards.append(hole_card)
-        if len(current_hole_cards) == 2:
-            hole_cards.append((current_hole_cards[0], current_hole_cards[1]))
-            current_hole_cards = []
-    return tuple(hole_cards)
-
-
-# Instantiates new cards from the arguments and returns them in a tuple
-def parse_cards(card_strings):
-    return [prob_functions.Card(arg) for arg in card_strings]
 
 
 # Driver function which parses the command line arguments into hole cards,
 # instantiates data structures to hold the intermediate results of the
 # simulations, performs the simulations, and prints the results
-def calculate(list_of_cards):
+def main():#list_of_cards):
 
 
     #list_of_cards should be of form [(r1,s1),(r2,s2),(r3,s3),(r4,s4)] etc
     #where each tuple represents a card
 
 
-    # Parse command line arguments into hole cards and create deck
-    (hole_cards, num_iterations,
-                    exact, given_board, deck) = parse_args()
+
+
+    a = deck.Card(0,14)
+    b = deck.Card(1,14)
+    c = deck.Card(2,4)
+    d = deck.Card(2,3)
+    hole_cards = ((a, b),(c,d)) 
+    num_iterations = 10000
+    exact = False
+    given_board = None
+    
+    #generate deck that has the hole cards missing
+    the_deck = prob_functions.generate_deck(hole_cards)
+
+
+    print(the_deck)
     num_players = len(hole_cards)
 
 
@@ -131,7 +60,7 @@ def calculate(list_of_cards):
 
 
     # Run simulations
-    for remaining_board in generate_boards(deck, num_iterations, board_length):
+    for remaining_board in generate_boards(the_deck, num_iterations, board_length):
         # Generate a new board
         if given_board:
             board = given_board[:]
@@ -155,3 +84,9 @@ def calculate(list_of_cards):
         for index, result in enumerate(result_list):
             result_histograms[index][result[0]] += 1
     prob_functions.print_results(hole_cards, winner_list)
+
+
+if __name__ == '__main__':
+    start = time.time()
+    main()
+    print("\nTime elapsed(seconds): ", time.time() - start)

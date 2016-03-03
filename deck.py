@@ -7,8 +7,8 @@ class Card(object):
 # Represents a standard playing card.
 
     #suit and rank are stored as ints corresponding to the index of the list
-    suit_names = ["c", "d", "h", "s"]
-    rank_names = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+    suit_names = {0:"c",1:"d",2:"h",3:"s"}
+    rank_names = {2: "2", 3: "3", 4:"4", 5: "5", 6:"6", 7:"7", 8:"8", 9:"9", 10:"10", 11:"J", 12:"Q", 13:"K", 14:"A"}
 
     def __init__(self, suit, rank):
         if 0 <= suit and suit <= 3:
@@ -16,12 +16,18 @@ class Card(object):
         else:
             print("Error: suit does not exist")
 
-        if 0 <= rank and rank <= 12:
+        if 2 <= rank and rank <= 14:
             self.rank = rank
         else:
+            print(self.rank)
             print("Error:rank does not exist")
 
     def __str__(self):
+        """Returns a human-readable string representation."""
+        return '%s%s' % (Card.rank_names[self.rank],
+                             Card.suit_names[self.suit])
+
+    def __repr__(self):
         """Returns a human-readable string representation."""
         return '%s%s' % (Card.rank_names[self.rank],
                              Card.suit_names[self.suit])
@@ -32,10 +38,13 @@ class Card(object):
         Returns a positive number if this > other; negative if other > this;
         and 0 if they are equivalent. """
 
-        t1 = self.rank #, self.suit
-        t2 = other.rank#, other.suit
+        t1 = self.rank
+        t2 = other.rank
 
         return cmp(t1, t2)
+
+    def __eq__(self, other):
+        return self.rank == other.rank and self.suit == other.suit
 
 
 class Deck(object):
@@ -48,7 +57,7 @@ class Deck(object):
     def __init__(self):
         self.cards = []
         for suit in range(0,4):
-            for rank in range(0, 13):
+            for rank in range(2, 15):
                 card = Card(suit, rank)
                 self.cards.append(card)
 
@@ -76,7 +85,3 @@ class Deck(object):
     def shuffle(self):
         """Shuffles the cards in this deck."""
         random.shuffle(self.cards)
-
-    def sort(self):
-        """Sorts the cards in ascending order."""
-        self.cards.sort()

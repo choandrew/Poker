@@ -10,39 +10,18 @@ hand_rankings = ("High Card", "Pair", "Two Pair", "Three of a Kind",
 
 suit_index_dict = {"s": 0, "c": 1, "h": 2, "d": 3}
 reverse_suit_index = ("s", "c", "h", "d")
-suit_value_dict = {"T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
+suit_value_dict = {"T": 10, "J": 11, "Q": 12, "K": 14, "A": 1}
 for num in range(2, 10):
     suit_value_dict[str(num)] = num
 
 
-class Card:
-    # Takes in strings of the format: "As", "Tc", "6d"
-    def __init__(self, card_string):
-        value, self.suit = card_string[0], card_string[1]
-        self.value = suit_value_dict[value]
-        self.suit_index = suit_index_dict[self.suit]
-
-    def __str__(self):
-        return val_string[14 - self.value] + self.suit
-
-    def __repr__(self):
-        return val_string[14 - self.value] + self.suit
-
-    def __eq__(self, other):
-        return self.value == other.value and self.suit == other.suit
-
-
-
 # Returns deck of cards with all hole cards removed
 def generate_deck(taken_cards):
-    deck = []
-    for suit in reverse_suit_index:
-        for ch in val_string:
-            deck.append(Card(ch + suit))
+    the_deck = deck.Deck()
     for taken_card in taken_cards:
         for card in taken_card:
-            deck.remove(card)
-    return tuple(deck)
+            the_deck.remove_card(card)
+    return tuple(the_deck.cards)
 
 
 # Generate num_iterations random boards
@@ -54,6 +33,7 @@ def generate_random_boards(deck, num_iterations, board_length):
         yield random.sample(deck, 5 - board_length)
 
 
+
 # Generate all possible boards
 def generate_exhaustive_boards(deck, num_iterations, board_length):
     import itertools
@@ -62,8 +42,8 @@ def generate_exhaustive_boards(deck, num_iterations, board_length):
 
 # Returns a board of cards all with suit = flush_index
 def generate_suit_board(flat_board, flush_index):
-    histogram = [card.value for card in flat_board
-                                if card.suit_index == flush_index]
+    histogram = [card.rank for card in flat_board
+                                if card.suit == flush_index]
     histogram.sort(reverse=True)
     return histogram
 
@@ -76,14 +56,14 @@ def preprocess(histogram):
 
 # Takes an iterable sequence and returns two items in a tuple:
 # 1: 4-long list showing how often each card suit appears in the sequence
-# 2: 13-long list showing how often each card value appears in the sequence
+# 2: 14-long list showing how often each card value appears in the sequence
 def preprocess_board(flat_board):
-    suit_histogram, histogram = [0] * 4, [0] * 13
+    suit_histogram, histogram = [0] * 4, [0] * 14
     # Reversing the order in histogram so in the future, we can traverse
     # starting from index 0
     for card in flat_board:
-        histogram[14 - card.value] += 1
-        suit_histogram[card.suit_index] += 1
+        histogram[14 - card.rank] += 1
+        suit_histogram[card.suit] += 1
     return suit_histogram, histogram, max(suit_histogram)
 
 
@@ -191,7 +171,7 @@ def detect_hand(hole_cards, given_board, suit_histogram,
     if max_suit >= 3:
         flush_index = suit_histogram.index(max_suit)
         for hole_card in hole_cards:
-            if hole_card.suit_index == flush_index:
+            if hole_card.suit == flush_index:
                 max_suit += 1
         if max_suit >= 5:
             flat_board = list(given_board)
@@ -205,7 +185,7 @@ def detect_hand(hole_cards, given_board, suit_histogram,
     # Add hole cards to histogram data structure and process it
     full_histogram = full_histogram[:]
     for hole_card in hole_cards:
-        full_histogram[14 - hole_card.value] += 1
+        full_histogram[14 - hole_card.rank] += 1
     histogram_board = preprocess(full_histogram)
 
     # Find which card value shows up the most and second most times
