@@ -15,6 +15,16 @@ def get_number_of_players():
 
     return number_of_players
 
+def deal_cards(players_remaining_in_round, the_deck):
+    for player in players_remaining_in_round:
+        c1 = the_deck.pop_card()
+        c2 = the_deck.pop_card()
+        player.assign_hand(c1, c2)
+    state = 1
+
+
+def betting():
+    pass
 
 def main():
     
@@ -46,14 +56,7 @@ def main():
             players_remaining_in_round.append(player)
 
         #hand out cards and take ante
-        while (state == 0):
-            for player in players_remaining_in_round:
-            
-                c1 = the_deck.pop_card()
-                print(the_deck)
-                c2 = the_deck.pop_card()
-                player.assign_hand(c1, c2)
-            state = 1
+        deal_cards(players_remaining_in_round, the_deck)
         
         # first state of betting
         while (state == 1):

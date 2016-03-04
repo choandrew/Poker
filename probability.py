@@ -4,36 +4,25 @@ import deck
 import time
 import prob_functions
 
-
-
 # Driver function which parses the command line arguments into hole cards,
 # instantiates data structures to hold the intermediate results of the
 # simulations, performs the simulations, and prints the results
-def main():#list_of_cards):
 
 
-    #list_of_cards should be of form [(r1,s1),(r2,s2),(r3,s3),(r4,s4)] etc
-    #where each tuple represents a card
+#hole_cards =((a,b),(c,d),...) where a,b,c,d,... are cards
+#num_iterations is the number of monte carlo simulations
+#exact is if you want to calculate the exact value
+#given_board = [a,b,c,...] where len(given_board) = 3,4, or 5 and a,b,c are cards
 
+def calculate_prob(hole_cards, num_iterations, given_board):
 
+    if given_board == []:
+        given_board = None
 
-
-    a = deck.Card(0,14)
-    b = deck.Card(1,14)
-    c = deck.Card(2,4)
-    d = deck.Card(2,3)
-    hole_cards = ((a, b),(c,d)) 
-    num_iterations = 10000
-    exact = False
-    given_board = None
-    
     #generate deck that has the hole cards missing
     the_deck = prob_functions.generate_deck(hole_cards)
 
-
-    print(the_deck)
     num_players = len(hole_cards)
-
 
     # Create results data structures which tracks results of comparisons
     # 1) result_histograms: a list for each player that shows the number of
@@ -46,10 +35,8 @@ def main():#list_of_cards):
     for player in range(num_players):
         result_histograms.append([0] * 10)
 
-
     # Choose whether we're running a Monte Carlo or exhaustive simulation
     board_length = 0 if given_board == None else len(given_board)
-
 
     # When a board is given, exact calculation is much faster than Monte Carlo
     # simulation, so default to exact if a board is given
@@ -57,7 +44,6 @@ def main():#list_of_cards):
         generate_boards = prob_functions.generate_exhaustive_boards
     else:
         generate_boards = prob_functions.generate_random_boards
-
 
     # Run simulations
     for remaining_board in generate_boards(the_deck, num_iterations, board_length):
@@ -83,10 +69,21 @@ def main():#list_of_cards):
         # Increment what hand each player made
         for index, result in enumerate(result_list):
             result_histograms[index][result[0]] += 1
-    prob_functions.print_results(hole_cards, winner_list)
+    return prob_functions.print_results(hole_cards, winner_list)
 
 
 if __name__ == '__main__':
-    start = time.time()
-    main()
-    print("\nTime elapsed(seconds): ", time.time() - start)
+    a1 = deck.Card(0,14)
+    a2 = deck.Card(1,14)
+    b1 = deck.Card(2,4)
+    b2 = deck.Card(2,3)
+    c1 = deck.Card(3,4)
+    c2 = deck.Card(3,9)
+    
+    hole_cards = ((a1, a2),(b1,b2),(c1,c2)) 
+    num_iterations = 10000
+    exact = False
+    given_board = []
+    
+    calculate_prob(hole_cards, num_iterations, given_board)
+

@@ -1,20 +1,6 @@
 import deck
 
 # Constants
-
-val_string = "AKQJT98765432"
-hand_rankings = ("High Card", "Pair", "Two Pair", "Three of a Kind",
-                 "Straight", "Flush", "Full House", "Four of a Kind",
-                 "Straight Flush", "Royal Flush")
-
-
-suit_index_dict = {"s": 0, "c": 1, "h": 2, "d": 3}
-reverse_suit_index = ("s", "c", "h", "d")
-suit_value_dict = {"T": 10, "J": 11, "Q": 12, "K": 14, "A": 1}
-for num in range(2, 10):
-    suit_value_dict[str(num)] = num
-
-
 # Returns deck of cards with all hole cards removed
 def generate_deck(taken_cards):
     the_deck = deck.Deck()
@@ -28,10 +14,9 @@ def generate_deck(taken_cards):
 def generate_random_boards(deck, num_iterations, board_length):
     import random
     import time
-    random.seed(time.time())
+    random.seed( time.time() )
     for iteration in range(num_iterations):
         yield random.sample(deck, 5 - board_length)
-
 
 
 # Generate all possible boards
@@ -164,8 +149,7 @@ def get_high_cards(histogram_board):
 # Two Pair: (2, high pair card, low pair card, kicker)
 # Pair: (1, pair card, (kicker high card, kicker med card, kicker low card))
 # High Card: (0, [high card, second high card, third high card, etc.])
-def detect_hand(hole_cards, given_board, suit_histogram,
-                                            full_histogram, max_suit):
+def detect_hand(hole_cards, given_board, suit_histogram, full_histogram, max_suit):
     # Determine if flush possible. If yes, four of a kind and full house are
     # impossible, so return royal, straight, or regular flush.
     if max_suit >= 3:
@@ -235,9 +219,13 @@ def compare_hands(result_list):
 
 
 # Print results
-def print_results(hole_cards, winner_list):
+def return_results(hole_cards, winner_list):
     float_iterations = float(sum(winner_list))
-    print("Winning Percentages:")
+    #ties
+    print("Ties: ", float(winner_list[0]) / float_iterations, "\n")
+
+    #winners
     for index, hole_card in enumerate(hole_cards):
         print(hole_card, ": ", float(winner_list[index + 1]) / float_iterations)
-    print("Ties: ", float(winner_list[0]) / float_iterations, "\n")
+
+
