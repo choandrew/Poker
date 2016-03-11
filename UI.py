@@ -151,7 +151,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                 current_bet += amount_bet
                 print("Player %s raises to $%s" % (player.get_name(), current_bet))
 
-                current_bet += amount_bet
                 player.loss(current_bet - bet_list[i])
                 player.add_bet_this_round(current_bet - bet_list[i])
                 print("Player %s has $%s left" %(player.get_name(), player.get_cash()))
@@ -261,8 +260,10 @@ def game():
         
 
         pot = ante(players_remaining_in_round, pot, ante_value)
+        
         print("After Ante:")
         player_information(players_remaining_in_round)
+        print("Pot is currently $%s" % pot)
 
         #hand out cards and take ante
         deal_cards(players_remaining_in_round, the_deck)
@@ -277,6 +278,7 @@ def game():
                 break
         if (all_in == False):
             pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+            print("Pot is currently $%s" % pot)
         
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
@@ -302,6 +304,7 @@ def game():
                 break
         if (all_in == False):
             pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+            print("Pot is currently $%s" % pot)
 
 
         if (len(players_remaining_in_round) == 1):
@@ -324,6 +327,7 @@ def game():
                 break
         if (all_in == False):
             pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+            print("Pot is currently $%s" % pot)
         
 
         if (len(players_remaining_in_round) == 1):
@@ -345,6 +349,7 @@ def game():
                 break
         if (all_in == False):
             pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+            print("Pot is currently $%s" % pot)
 
         
         # card reveal 

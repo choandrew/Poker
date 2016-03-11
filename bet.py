@@ -13,7 +13,7 @@ import probability
 """
 
 def kelly(b,p):
-    return ((p*(b+1) - 1) /b)
+    return ((p*(b+1) - 1) / float(b))
 
 #calculate probability here
 def bet(current_pot,ante_value,current_bet, player,given_board):
@@ -25,10 +25,9 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
     win_prob = p[1]
 
 
-    k_tie = kelly(float(current_bet), tie_prob)
-    k_win = kelly(float(current_bet), win_prob)
+    k_tie = kelly(current_pot/2, tie_prob)
+    k_win = kelly(current_pot  , win_prob)
 
-    print(k_tie, k_win)
     bet_frac = (k_tie + k_win)  /3
 
     bet_value = int( deceive.liar(tie_prob, win_prob) * bet_frac *player.get_cash() /100) *100
