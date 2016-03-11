@@ -21,7 +21,10 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
     cards = (hand, )
 
     p = probability.calculate_prob(cards, 500, given_board)
-    tie = kelly(current_pot/2, p[0]) 
+    tie_prob = p[0]
+    win_prob = p[1]
+
+    tie = kelly(current_bet, p[0]) 
     win = kelly(current_pot, p[1])
 
     bet_frac =  ((tie+win)/3)

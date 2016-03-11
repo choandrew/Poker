@@ -141,7 +141,6 @@ if __name__ == '__main__':
 
     num_iterations = 1000
     exact = False
-    given_board = []
    
     #test of func
     #print(single_prob(hole_cards, num_iterations, given_board))
@@ -160,6 +159,12 @@ if __name__ == '__main__':
     #test of func
     print(get_winner(hole_cards, community_cards), "\n")
 
-    hole_cards = ((a1,a2),)
 
-    calculate_prob(hole_cards, num_iterations, given_board)
+
+    num_iterations = 1000
+    a1 = deck.Card(0,14)
+    a2 = deck.Card(1,14)
+    hole_cards = ((a1,a2),)
+    given_board = []
+
+    print(calculate_prob(hole_cards, num_iterations, given_board))
