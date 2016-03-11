@@ -243,7 +243,7 @@ def game():
     round_n = 1
     while (game == 1):
         
-        if round_n % 10 == 0:
+        if round_n % 5 == 0:
             ante_value = ante_value * 2    
 
         
@@ -275,7 +275,12 @@ def game():
         print("\nYour cards: %s" % str(human.get_hand()))
         # first state of betting
         
-        pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+        all_in = False
+        for player in players_remaining_in_round:
+            if player.get_cash <= 0:
+                all_in = True
+                break
+        if (all_in == False):
         
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
@@ -293,7 +298,13 @@ def game():
         print("Community cards:", community_cards)
 
         player_information(players_remaining_in_round)
-        pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+
+        all_in = False
+        for player in players_remaining_in_round:
+            if player.get_cash <= 0:
+                all_in = True
+                break
+        if (all_in == False):
 
 
         if (len(players_remaining_in_round) == 1):
@@ -307,8 +318,17 @@ def game():
         print("Community cards:", community_cards)
 
         player_information(players_remaining_in_round)
-        pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
         
+        
+        all_in = False
+        for player in players_remaining_in_round:
+            if player.get_cash <= 0:
+                all_in = True
+                break
+        if (all_in == False):
+            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+        
+
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
             player = players_remaining_in_round[0]
@@ -321,7 +341,12 @@ def game():
         print("Community cards:", community_cards)
 
         player_information(players_remaining_in_round)
-        pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
+        all_in = False
+        for player in players_remaining_in_round:
+            if player.get_cash <= 0:
+                all_in = True
+                break
+        if (all_in == False):
 
         
         # card reveal 
