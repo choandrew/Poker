@@ -1,8 +1,9 @@
 import scipy
-
+import bluff
+import probability
+import player as P
 
 # f* = (bp-q)/b = (p(b+1) - 1) / b
-
 
 """
     f* is the fraction of the current bankroll to wager, i.e. how much to bet;
@@ -15,9 +16,8 @@ import scipy
 def kelly(b,p):
     return ((p(b+1) - 1) /b)
 
+#calculate probability here
+def bet(current_pot,ante_value,current_bet, player):
+    return 10
 
 
-
-
-def bet(current_pot,p):
-    pass

@@ -7,7 +7,7 @@ class Card(object):
 # Represents a standard playing card.
 
     #suit and rank are stored as ints corresponding to the index of the list
-    suit_names = {0:"c",1:"d",2:"h",3:"s"}
+    suit_names = {0:"♣",1:"♦",2:"♥",3:"♠"}
     rank_names = {2: "2", 3: "3", 4:"4", 5: "5", 6:"6", 7:"7", 8:"8", 9:"9", 10:"10", 11:"J", 12:"Q", 13:"K", 14:"A"}
 
     def __init__(self, suit, rank):
