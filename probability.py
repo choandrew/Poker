@@ -1,6 +1,5 @@
 import argparse
 import re
-import deck
 import time
 import prob_functions
 from multiprocessing import Process, Queue
@@ -41,7 +40,7 @@ def single_prob(hole_cards, num_iterations, given_board):
 
     # When a board is given, exact calculation is much faster than Monte Carlo
     # simulation, so default to exact if a board is given
-    if given_board is not None or given_board == "e":
+    if given_board is not None or num_iterations == "e":
         generate_boards = prob_functions.generate_exhaustive_boards
     else:
         generate_boards = prob_functions.generate_random_boards
@@ -77,28 +76,21 @@ def calculate_prob(hole_cards, num_iterations, given_board):
     import itertools
     from multiprocess import Pool
     import dill as pickle
-
     p = Pool(4)
-    
+
     deck_cards = prob_functions.generate_deck(hole_cards)
     possible_card_pairings = tuple(itertools.combinations(deck_cards, 2))
-
     card_combos = map( lambda x: tuple (list(hole_cards) + [x]), possible_card_pairings)
-
 
     s = pickle.dumps(lambda hc: single_prob(hc, num_iterations, given_board))
     f = pickle.loads(s) 
-
     prob_list = p.map( f , card_combos)
-
     tie = 0
     win = 0
     for prob in prob_list:
         tie += prob[0] 
         win += prob[1]
-    
     l = len(prob_list)
-
     tie = tie / l
     win = win / l
 
@@ -137,6 +129,7 @@ def get_winner(hole_cards, community_cards):
 
 #tests
 if __name__ == '__main__':
+    import deck
     a1 = deck.Card(0,9)
     a2 = deck.Card(1,13)
     b1 = deck.Card(0,14)
@@ -145,12 +138,13 @@ if __name__ == '__main__':
     c2 = deck.Card(3,9)
     
     hole_cards = ((a1, a2),(b1,b2),(c1,c2)) 
+
     num_iterations = 1000
     exact = False
     given_board = []
    
     #test of func
-    print(single_prob(hole_cards, num_iterations, given_board))
+    #print(single_prob(hole_cards, num_iterations, given_board))
 
     print("\n")
 
@@ -166,5 +160,6 @@ if __name__ == '__main__':
     #test of func
     print(get_winner(hole_cards, community_cards), "\n")
 
+    hole_cards = ((a1,a2),)
 
     calculate_prob(hole_cards, num_iterations, given_board)

@@ -1,7 +1,6 @@
 import scipy
 import deceive
 import probability
-import player as P
 
 # f* = (bp-q)/b = (p(b+1) - 1) / b
 
@@ -21,10 +20,21 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
     hand = player.get_hand()
     cards = (hand, )
 
-    p = probability.calculate_prob(cards, 100, given_board)
+    p = probability.calculate_prob(cards, 500, given_board)
     tie = kelly(current_pot/2, p[0]) 
     win = kelly(current_pot, p[1])
 
-    bet_value =  ((tie+win)/3)
-    return int(bet_value*player.get_cash())
+    bet_frac =  ((tie+win)/3)
 
+    bet_value =  int(bet_value*player.get_cash())
+  
+    #must bet above ante, so having less than ante in cash is essentially just all in
+    if (bet_value > player.get_cash() - ante_value):
+        bet_value = player.get_cash()
+
+    if (current_bet == 0 and bet_value < ante_value):
+        return 0
+    elif (current_bet != 0 and bet_value < ante_value):
+        return -1
+    else:
+        return bet_value

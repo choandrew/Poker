@@ -74,8 +74,15 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                         raised = input("Raise to what?")
                     
                     raised = int(raised)
+                    
+                    if raised > player.get_cash() - ante_value:
+                        raised = player.get_cash()
+                        print("You all in.")
+                    
                     current_bet = raised
-                   
+                    
+                    
+
                     player.loss(current_bet - bet_list[i])
                     player.add_bet_this_round(current_bet - bet_list[i])
                     
