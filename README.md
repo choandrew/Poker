@@ -6,7 +6,7 @@ A game of poker against AI utilizing the Kelly Criterion
 ### Bet
 Calculates how much the computer should bet
 
-### Bluff
+### Deceive 
 Calculates when/if the computer should bluff a card
 
 ### Deck

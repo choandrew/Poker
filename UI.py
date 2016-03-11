@@ -115,8 +115,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     pot += current_bet - bet_list[i]
 
 
-
-
                 if rcf == "c" or rcf == "call":
                     print("You call.")
                     
@@ -235,6 +233,7 @@ def game():
     win  = 0
     game = 1
     round_n = 1
+    pot = 0
     while (game == 1):
         
         if round_n % 5 == 0:
@@ -254,8 +253,8 @@ def game():
         state = 0 
         
         players_remaining_in_round = []
-        for player in players:
-            players_remaining_in_round.append(player)
+        for a_player in players:
+            players_remaining_in_round.append(a_player)
         
         
 
@@ -272,8 +271,8 @@ def game():
         # first state of betting
         
         all_in = False
-        for player in players_remaining_in_round:
-            if player.get_cash() <= 0:
+        for a_player in players_remaining_in_round:
+            if a_player.get_cash() <= 0:
                 all_in = True
                 break
         if (all_in == False):
@@ -282,10 +281,9 @@ def game():
         
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            player = players[players_remaining_in_round[0].get_name]
-            player.win(pot)
-
+            players[players_remaining_in_round[0].get_name()].win(pot)
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
+            print("1")
             continue
         
             #flop and flop betting
@@ -309,8 +307,11 @@ def game():
 
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            player = players[players_remaining_in_round[0].get_name]
-            player.win(pot)
+            #player = players[players_remaining_in_round[0].get_name()]
+            #player.win(pot)
+            print("2")
+            print(pot)
+            players[players_remaining_in_round[0].get_name()].win(pot)
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
             continue
         # turn and turn betting
@@ -332,9 +333,11 @@ def game():
 
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            player = players[players_remaining_in_round[0].get_name]
-            player.win(pot)
+            #player = players[players_remaining_in_round[0].get_name()]
+            #player.win(pot)
+            players[players_remaining_in_round[0].get_name()].win(pot)
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
+            print("3")
             continue
         
         # river and river betting
@@ -373,8 +376,11 @@ def game():
 
         #payout
         for winner in winner_index:
-            player = players[players_remaining_in_round[winner-1].get_name]
-            player.win(pot/len(winner_index))
+            #player = players[players_remaining_in_round[winner-1].get_name()]
+            #player.win(pot/len(winner_index))
+            players[players_remaining_in_round[winner-1].get_name()].win(pot/len(winner_index))
+            
+            print("4")
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
         
 
