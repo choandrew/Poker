@@ -3,6 +3,7 @@ import re
 import deck
 import time
 import prob_functions
+from multiprocessing import Process, Queue
 
 # Driver function which parses the command line arguments into hole cards,
 # instantiates data structures to hold the intermediate results of the
@@ -14,7 +15,7 @@ import prob_functions
 #exact is if you want to calculate the exact value
 #given_board = [a,b,c,...] where len(given_board) = 3,4, or 5 and a,b,c are cards
 
-def calculate_prob(hole_cards, num_iterations, given_board):
+def single_prob(hole_cards, num_iterations, given_board):
 
     if given_board == []:
         given_board = None
@@ -40,7 +41,7 @@ def calculate_prob(hole_cards, num_iterations, given_board):
 
     # When a board is given, exact calculation is much faster than Monte Carlo
     # simulation, so default to exact if a board is given
-    if exact or given_board is not None:
+    if given_board is not None or given_board == "e":
         generate_boards = prob_functions.generate_exhaustive_boards
     else:
         generate_boards = prob_functions.generate_random_boards
@@ -71,6 +72,37 @@ def calculate_prob(hole_cards, num_iterations, given_board):
             result_histograms[index][result[0]] += 1
     return prob_functions.return_results(hole_cards, winner_list)
 
+#in this case, hole cards is just one card
+def calculate_prob(hole_cards, num_iterations, given_board):
+    import itertools
+    from multiprocess import Pool
+    import dill as pickle
+
+    p = Pool(4)
+    
+    deck_cards = prob_functions.generate_deck(hole_cards)
+    possible_card_pairings = tuple(itertools.combinations(deck_cards, 2))
+
+    card_combos = map( lambda x: tuple (list(hole_cards) + [x]), possible_card_pairings)
+
+
+    s = pickle.dumps(lambda hc: single_prob(hc, num_iterations, given_board))
+    f = pickle.loads(s) 
+
+    prob_list = p.map( f , card_combos)
+
+    tie = 0
+    win = 0
+    for prob in prob_list:
+        tie += prob[0] 
+        win += prob[1]
+    
+    l = len(prob_list)
+
+    tie = tie / l
+    win = win / l
+
+    return (tie,win)
 
 def get_winner(hole_cards, community_cards):
 
@@ -118,9 +150,9 @@ if __name__ == '__main__':
     given_board = []
    
     #test of func
-    calculate_prob(hole_cards, num_iterations, given_board)
+    print(single_prob(hole_cards, num_iterations, given_board))
 
-    print("\n\n\n")
+    print("\n")
 
     d1 = deck.Card(1,7)
     d2 = deck.Card(2,2)
@@ -132,4 +164,7 @@ if __name__ == '__main__':
     print(community_cards)
 
     #test of func
-    print(get_winner(hole_cards, community_cards))
+    print(get_winner(hole_cards, community_cards), "\n")
+
+
+    calculate_prob(hole_cards, num_iterations, given_board)

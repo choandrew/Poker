@@ -1,5 +1,5 @@
 import scipy
-import bluff
+import deceive
 import probability
 import player as P
 
@@ -14,10 +14,17 @@ import player as P
 """
 
 def kelly(b,p):
-    return ((p(b+1) - 1) /b)
+    return ((p*(b+1) - 1) /b)
 
 #calculate probability here
-def bet(current_pot,ante_value,current_bet, player):
-    return 10
+def bet(current_pot,ante_value,current_bet, player,given_board):
+    hand = player.get_hand()
+    cards = (hand, )
 
+    p = probability.calculate_prob(cards, 100, given_board)
+    tie = kelly(current_pot/2, p[0]) 
+    win = kelly(current_pot, p[1])
+
+    bet_value =  ((tie+win)/3)
+    return int(bet_value*player.get_cash())
 

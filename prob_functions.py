@@ -38,7 +38,7 @@ def preprocess(histogram):
     return [(14 - index, frequency) for index, frequency in
                                         enumerate(histogram) if frequency]
 
-
+    
 # Takes an iterable sequence and returns two items in a tuple:
 # 1: 4-long list showing how often each card suit appears in the sequence
 # 2: 14-long list showing how often each card value appears in the sequence
@@ -220,6 +220,7 @@ def compare_hands(result_list):
 
 # Print results
 def return_results(hole_cards, winner_list):
+    """
     float_iterations = float(sum(winner_list))
     #ties
     print("Ties: ", float(winner_list[0]) / float_iterations, "\n")
@@ -227,5 +228,18 @@ def return_results(hole_cards, winner_list):
     #winners
     for index, hole_card in enumerate(hole_cards):
         print(hole_card, ": ", float(winner_list[index + 1]) / float_iterations)
+    """
 
+    float_iterations = float(sum(winner_list))
+    #ties
+    ties = float(winner_list[0]) / float_iterations
+    
+    prob_list = []
+
+    prob_list.append(ties)
+    #winners
+    for index, hole_card in enumerate(hole_cards):
+        prob_list.append(float(winner_list[index + 1]) / float_iterations)
+   
+    return(prob_list)
 

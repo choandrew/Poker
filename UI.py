@@ -130,7 +130,7 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     #players_remaining_in_round.remove(player)
                     continue
         else:
-            amount_bet = B.bet(pot, ante_value, current_bet, player)
+            amount_bet = B.bet(pot, ante_value, current_bet, player, community_cards)
             
             
             if (amount_bet == -1):
@@ -147,7 +147,7 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
             #amount_bet > 0 aka a raise or call
             else:
                 current_bet += amount_bet
-                print("Player %s raises to %s" % (player.get_name(), current_bet))
+                print("Player %s raises to $%s" % (player.get_name(), current_bet))
 
                 current_bet += amount_bet
                 player.loss(current_bet - bet_list[i])
@@ -203,7 +203,7 @@ def player_information(players):
         print("Player %s has $%s" % (player.get_name(), player.get_cash()))
 
 
-def main():
+def game():
     
     #get number of players
     #there is always one player, the rest are AI
@@ -233,8 +233,13 @@ def main():
 
     win  = 0
     game = 1
+    round_n = 1
     while (game == 1):
+        
+        if round_n % 10 == 0:
+            ante_value = ante_value * 2    
 
+        
         player_information(players)
        
         print("\n---------------------------------------------")
@@ -266,9 +271,11 @@ def main():
         pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
         
         if (len(players_remaining_in_round) == 1):
+            print(community_cards)
             player = players_remaining_in_round[0]
             player.win(pot)
-            print("Player %s wins the round and %s " % (player.get_name(), pot))
+
+            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
             continue
         
             #flop and flop betting
@@ -283,9 +290,10 @@ def main():
 
 
         if (len(players_remaining_in_round) == 1):
+            print(community_cards)
             player = players_remaining_in_round[0]
             player.win(pot)
-            print("Player %s wins the round and %s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
             continue
         # turn and turn betting
         community_cards.append(the_deck.pop_card())
@@ -295,9 +303,10 @@ def main():
         pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
         
         if (len(players_remaining_in_round) == 1):
+            print(community_cards)
             player = players_remaining_in_round[0]
             player.win(pot)
-            print("Player %s wins the round and $%s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
             continue
         
         # river and river betting
@@ -310,6 +319,7 @@ def main():
         
         # card reveal 
         
+        print("Community cards:", community_cards)
         for player in players_remaining_in_round:
             if player.get_name() == 0:
                 print("Your cards:", player.get_hand())
@@ -330,7 +340,7 @@ def main():
         for winner in winner_index:
             player = players_remaining_in_round[winner-1]
             player.win(pot/len(winner_index))
-            print("Player %s wins the round and %s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
         
 
         #player elimination
@@ -352,6 +362,8 @@ def main():
     if (win == 1):
         print("You win!")
 
+    round_n += 1
+
 
 def reset_players(players):
     for player in players:
@@ -369,5 +381,5 @@ def reorder_players(players):
 
 
 if __name__ == "__main__":
-    main()
+    game()
 
