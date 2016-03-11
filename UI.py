@@ -71,18 +71,11 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                         print("Raise must be greater than ante.")
                         print("Current bet is %s" % current_bet)
                         print("Current ante is %s" % ante_value)
-                        raised = input("Raise to what?")
+                        raised = input("Raise to what? ")
                     
-                    raised = int(raised)
-                    
-                    if raised > player.get_cash() - ante_value:
-                        raised = player.get_cash()
-                        print("You all in.")
-                    
+                    raised = int(int(raised)/100)*100
                     current_bet = raised
-                    
-                    
-
+                   
                     player.loss(current_bet - bet_list[i])
                     player.add_bet_this_round(current_bet - bet_list[i])
                     
@@ -103,16 +96,16 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                 rcf = input("Raise, call, or fold? (r,c,f) ").lower()
                 if rcf == "r" or rcf == "raise":
                     print("Current bet is %s" % current_bet)
-                    raised = (input("Raise to what?"))
+                    raised = (input("Raise to what? "))
                     
                     while ((not raised.isdigit()) and int(raised) - current_bet > ante_value) :
                         print("Did not input a legal number.")
                         print("Raise must be greater than ante.")
                         print("Current bet is %s" % current_bet)
                         print("Current ante is %s" % ante_value)
-                        raised = input("Raise to what?")
+                        raised = input("Raise to what? ")
                     
-                    raised = int(raised)
+                    raised = int(int(raised)/100)*100
                     current_bet = raised
                    
                     player.loss(current_bet - bet_list[i])
@@ -120,6 +113,9 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     
                     bet_list[i] = current_bet
                     pot += current_bet - bet_list[i]
+
+
+
 
                 if rcf == "c" or rcf == "call":
                     print("You call.")
@@ -138,7 +134,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     continue
         else:
             amount_bet = B.bet(pot, ante_value, current_bet, player, community_cards)
-            
             
             if (amount_bet == -1):
                 print("Player %s folds" % player.get_name())
@@ -288,7 +283,7 @@ def game():
             player = players_remaining_in_round[0]
             player.win(pot)
 
-            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
             continue
         
             #flop and flop betting
@@ -313,7 +308,7 @@ def game():
             print(community_cards)
             player = players_remaining_in_round[0]
             player.win(pot)
-            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
             continue
         # turn and turn betting
         community_cards.append(the_deck.pop_card())
@@ -335,7 +330,7 @@ def game():
             print(community_cards)
             player = players_remaining_in_round[0]
             player.win(pot)
-            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
             continue
         
         # river and river betting
@@ -375,7 +370,7 @@ def game():
         for winner in winner_index:
             player = players_remaining_in_round[winner-1]
             player.win(pot/len(winner_index))
-            print("\nPlayer %s wins the round and %s " % (player.get_name(), pot))
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
         
 
         #player elimination
