@@ -26,7 +26,7 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
 
     bet_frac = ( kelly(current_bet, tie_prob + kelly(current_pot, win_prob) ) /3)
 
-    bet_value = int( deceive.liar(tie_prob, win_prob) * bet_value *player.get_cash()  )
+    bet_value = int( deceive.liar(tie_prob, win_prob) * bet_frac *player.get_cash()  )
   
     #must bet above ante, so having less than ante in cash is essentially just all in
     if (bet_value > player.get_cash() - ante_value):
