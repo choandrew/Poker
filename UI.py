@@ -282,7 +282,7 @@ def game():
         
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            player = players_remaining_in_round[0]
+            player = players[players_remaining_in_round[0].get_name]
             player.win(pot)
 
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
@@ -309,7 +309,7 @@ def game():
 
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            player = players_remaining_in_round[0]
+            player = players[players_remaining_in_round[0].get_name]
             player.win(pot)
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
             continue
@@ -332,7 +332,7 @@ def game():
 
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            player = players_remaining_in_round[0]
+            player = players[players_remaining_in_round[0].get_name]
             player.win(pot)
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
             continue
@@ -373,7 +373,7 @@ def game():
 
         #payout
         for winner in winner_index:
-            player = players_remaining_in_round[winner-1]
+            player = players[players_remaining_in_round[winner-1].get_name]
             player.win(pot/len(winner_index))
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
         
