@@ -277,10 +277,11 @@ def game():
         
         all_in = False
         for player in players_remaining_in_round:
-            if player.get_cash <= 0:
+            if player.get_cash() <= 0:
                 all_in = True
                 break
         if (all_in == False):
+            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
         
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
@@ -301,10 +302,11 @@ def game():
 
         all_in = False
         for player in players_remaining_in_round:
-            if player.get_cash <= 0:
+            if player.get_cash() <= 0:
                 all_in = True
                 break
         if (all_in == False):
+            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
 
 
         if (len(players_remaining_in_round) == 1):
@@ -322,7 +324,7 @@ def game():
         
         all_in = False
         for player in players_remaining_in_round:
-            if player.get_cash <= 0:
+            if player.get_cash() <= 0:
                 all_in = True
                 break
         if (all_in == False):
@@ -343,10 +345,11 @@ def game():
         player_information(players_remaining_in_round)
         all_in = False
         for player in players_remaining_in_round:
-            if player.get_cash <= 0:
+            if player.get_cash() <= 0:
                 all_in = True
                 break
         if (all_in == False):
+            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
 
         
         # card reveal 
