@@ -76,6 +76,7 @@ def calculate_prob(hole_cards, num_iterations, given_board):
     import itertools
     from multiprocess import Pool
     import dill as pickle
+
     p = Pool(4)
 
     deck_cards = prob_functions.generate_deck(hole_cards)
@@ -83,8 +84,10 @@ def calculate_prob(hole_cards, num_iterations, given_board):
     card_combos = map( lambda x: tuple (list(hole_cards) + [x]), possible_card_pairings)
 
     s = pickle.dumps(lambda hc: single_prob(hc, num_iterations, given_board))
-    f = pickle.loads(s) 
+    f = pickle.loads(s)
+
     prob_list = p.map( f , card_combos)
+
     tie = 0
     win = 0
     for prob in prob_list:

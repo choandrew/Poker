@@ -44,7 +44,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
         #have to do it like this because must the "first person" resets any time someone raises
         i = i % len(players_remaining_in_round)
         
-        
         #if everyone has bet, checks if everyone has equal bets
         if bet_list[-1] != 0:
             if check_equal(bet_list):
@@ -54,8 +53,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
         #if there's one player left 
         if len(players_remaining_in_round) == 1:
             return pot
-        
-        
         
         player = players_remaining_in_round[i]
 
@@ -79,8 +76,8 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     player.loss(current_bet - bet_list[i])
                     player.add_bet_this_round(current_bet - bet_list[i])
                     
-                    bet_list[i] = current_bet
                     pot += current_bet - bet_list[i]
+                    bet_list[i] = current_bet
 
                 elif rcf == "c" or rcf == "check":
                     print("You check.") 
@@ -88,10 +85,10 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     print("You Fold.")
                     del(bet_list[i])
                     del(players_remaining_in_round[i])
-                    #players_remaining_in_round.remove(player)
                     continue
                 else:
                     pass
+            
             elif (current_bet > 0):
                 rcf = input("Raise, call, or fold? (r,c,f) ").lower()
                 if rcf == "r" or rcf == "raise":
@@ -111,25 +108,27 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     player.loss(current_bet - bet_list[i])
                     player.add_bet_this_round(current_bet - bet_list[i])
                     
-                    bet_list[i] = current_bet
                     pot += current_bet - bet_list[i]
-
+                    bet_list[i] = current_bet
 
                 if rcf == "c" or rcf == "call":
                     print("You call.")
-                    
+
+                    print(current_bet)
+                    print(bet_list[i])
+
                     player.loss(current_bet - bet_list[i])
                     player.add_bet_this_round(current_bet - bet_list[i])
                     
-                    bet_list[i] = current_bet
                     pot += current_bet - bet_list[i]
-                     
+                    bet_list[i] = current_bet
+
                 if rcf == "f" or rcf == "fold":
                     print("You Fold.")
                     del(bet_list[i])
                     del(players_remaining_in_round[i])
-                    #players_remaining_in_round.remove(player)
                     continue
+
         else:
             amount_bet = B.bet(pot, ante_value, current_bet, player, community_cards)
             
@@ -152,10 +151,9 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                 player.loss(current_bet - bet_list[i])
                 player.add_bet_this_round(current_bet - bet_list[i])
                 print("Player %s has $%s left" %(player.get_name(), player.get_cash()))
-                bet_list[i] = current_bet
                
-                
                 pot += current_bet
+                bet_list[i] = current_bet
                 
 
         #for if everyone checks
@@ -200,8 +198,54 @@ def check_for_human_loss(players, win):
 def player_information(players):
     for player in players:
         print("Player %s has $%s" % (player.get_name(), player.get_cash()))
+        
+        
+class Game_state(object):
+    def __init__(self, number_of_players, starting_cash, ante_value):
+        self.number_of_players = number_of_players
+        self.starting_cash = starting_cash
+        self.ante_value = ante_value
+        
+        self.human_win  = False
+        self.game       = 1
+        self.round_n    = 1
+        self.pot             = 0
+    
+    
+    
+    def change_ante(self, new_ante):
+        self.ante_value = new_ante
+    
+    def human_win(self):
+        self.human_win = True
+    def get_human_win(self):
+        return self.human_win
+
+    def get_game(self):
+        return self.game
+    def end_game(self):
+        self.game = 0
+
+    def get_round(self):
+        return self.round_n
+    def increment_round(self):
+        self.round_n += 1
+    
+    def change_pot(self, n):
+        self.pot = n
+    def reset_pot(self):
+        self.pot = 0
+    def get_pot(self):
+        return self.pot
 
 
+def check_all_in(players_remaining_in_round):
+    all_in = False
+    for a_player in players_remaining_in_round:
+        if a_player.get_cash() <= 0:
+            all_in = True
+            break
+    return all_in
 def game():
     
     #get number of players
@@ -210,17 +254,15 @@ def game():
     #number_of_players = get_number_of_players() + 1
 
     number_of_players = 2
-
-
     starting_cash     = 10000 #input("How much starting cash? ")
     ante_value             = 100 # input("What is the blind? ")
 
-
+    game_state = Game_state(number_of_players, starting_cash, ante_value)
 
     print("\nGAME START")
     print("========================================\n")
 
-
+    #player creation
     players = []
     #player0 is always the human
     for i in range(0, number_of_players):
@@ -229,40 +271,33 @@ def game():
     #human player, making variable for ease of reference
     human = players[0]
 
-
-    win  = 0
-    game = 1
-    round_n = 1
-    pot = 0
-    while (game == 1):
+    while (game_state.get_game() == 1):
         
-        if round_n % 5 == 0:
-            ante_value = ante_value * 2    
+        if game_state.get_round() % 5 == 0:
+            game_state.change_ante_value(game_state.ante_value() * 2)   
 
-        
         player_information(players)
        
         print("\n---------------------------------------------")
         print("New Round:\n")
 
-        pot = 0
+        game_state.reset_pot()
         the_deck = deck.Deck()
         the_deck.shuffle()
-
-        community_cards = []
-        state = 0 
         
+        community_cards = []
+        state = 0
+
         players_remaining_in_round = []
         for a_player in players:
             players_remaining_in_round.append(a_player)
         
-        
+        #getting ante
+        game_state.change_pot( ante(players_remaining_in_round, game_state.get_pot(), ante_value))
 
-        pot = ante(players_remaining_in_round, pot, ante_value)
-        
         print("After Ante:")
         player_information(players_remaining_in_round)
-        print("Pot is currently $%s" % pot)
+        print("Pot is currently $%s" % game_state.get_pot())
 
         #hand out cards and take ante
         deal_cards(players_remaining_in_round, the_deck)
@@ -270,20 +305,16 @@ def game():
         print("\nYour cards: %s" % str(human.get_hand()))
         # first state of betting
         
-        all_in = False
-        for a_player in players_remaining_in_round:
-            if a_player.get_cash() <= 0:
-                all_in = True
-                break
-        if (all_in == False):
-            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
-            print("Pot is currently $%s" % pot)
+        if (check_all_in(players_remaining_in_round) == False):
+            game_state.change_pot( betting(players_remaining_in_round, ante_value, community_cards, game_state.get_pot()))
+            print("Pot is currently $%s" % game_state.get_pot())
         
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            players[players_remaining_in_round[0].get_name()].win(pot)
-            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
-            print("1")
+            players[players_remaining_in_round[0].get_name()].win(game_state.get_pot())
+            player = players[players_remaining_in_round[0].get_name()]
+            player.win(game_state.get_pot())
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), game_state.get_pot()))
             continue
         
             #flop and flop betting
@@ -294,69 +325,52 @@ def game():
         print("Community cards:", community_cards)
 
         player_information(players_remaining_in_round)
-
-        all_in = False
-        for player in players_remaining_in_round:
-            if player.get_cash() <= 0:
-                all_in = True
-                break
-        if (all_in == False):
-            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
-            print("Pot is currently $%s" % pot)
-
+        
+        if (check_all_in(players_remaining_in_round) == False):
+            bet = betting(players_remaining_in_round, ante_value, community_cards, game_state.get_pot())
+            game_state.change_pot(bet)
+            print("Pot is currently $%s" % game_state.get_pot())
 
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            #player = players[players_remaining_in_round[0].get_name()]
-            #player.win(pot)
-            print("2")
-            print(pot)
-            players[players_remaining_in_round[0].get_name()].win(pot)
-            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
+            player = players[players_remaining_in_round[0].get_name()]
+            
+            player.win(game_state.get_pot())
+
+            
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), game_state.get_pot()))
+            
             continue
-        # turn and turn betting
+       
+       # turn and turn betting
         community_cards.append(the_deck.pop_card())
         print("Community cards:", community_cards)
 
         player_information(players_remaining_in_round)
         
+        if (check_all_in(players_remaining_in_round) == False):
+            bet = betting(players_remaining_in_round, ante_value, community_cards, game_state.get_pot())
+            game_state.change_pot(bet)
+            print("Pot is currently $%s" % game_state.get_pot())
         
-        all_in = False
-        for player in players_remaining_in_round:
-            if player.get_cash() <= 0:
-                all_in = True
-                break
-        if (all_in == False):
-            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
-            print("Pot is currently $%s" % pot)
-        
-
         if (len(players_remaining_in_round) == 1):
             print(community_cards)
-            #player = players[players_remaining_in_round[0].get_name()]
-            #player.win(pot)
-            players[players_remaining_in_round[0].get_name()].win(pot)
-            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
-            print("3")
+            player = players[players_remaining_in_round[0].get_name()]
+            player.win(game_state.get_pot())
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), game_state.get_pot()))
             continue
         
         # river and river betting
         community_cards.append(the_deck.pop_card())
         print("Community cards:", community_cards)
-
+        
         player_information(players_remaining_in_round)
-        all_in = False
-        for player in players_remaining_in_round:
-            if player.get_cash() <= 0:
-                all_in = True
-                break
-        if (all_in == False):
-            pot = betting(players_remaining_in_round, ante_value, community_cards, pot)
-            print("Pot is currently $%s" % pot)
-
+        if (check_all_in(players_remaining_in_round) == False):
+            bet = betting(players_remaining_in_round, ante_value, community_cards, game_state.get_pot())
+            game_state.change_pot(bet)
+            print("Pot is currently $%s" % game_state.get_pot())
         
         # card reveal 
-        
         print("Community cards:", community_cards)
         for player in players_remaining_in_round:
             if player.get_name() == 0:
@@ -376,12 +390,9 @@ def game():
 
         #payout
         for winner in winner_index:
-            #player = players[players_remaining_in_round[winner-1].get_name()]
-            #player.win(pot/len(winner_index))
-            players[players_remaining_in_round[winner-1].get_name()].win(pot/len(winner_index))
-            
-            print("4")
-            print("\nPlayer %s wins the round and $%s " % (player.get_name(), pot))
+            player = players[players_remaining_in_round[winner-1].get_name()]
+            player.win(pot/len(winner_index))
+            print("\nPlayer %s wins the round and $%s " % (player.get_name(), game_state.get_pot()))
         
 
         #player elimination

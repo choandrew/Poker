@@ -20,7 +20,7 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
     hand = player.get_hand()
     cards = (hand, )
 
-    p = probability.calculate_prob(cards, 500, given_board)
+    p = probability.calculate_prob(cards, 100, given_board)
     tie_prob = p[0]
     win_prob = p[1]
 
