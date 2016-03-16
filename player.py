@@ -35,16 +35,3 @@ class Player(object):
 
     def empty_hand(self):
         self.hand = (None, None)
-
-
-
-
-    #amount bet this round
-    def amount_bet_this_round(self):
-        return self.bet_this_round
-
-    def add_bet_this_round(self, bet):
-        self.bet_this_round += bet
-
-    def reset_bet_this_round(self):
-        self.bet_this_round = 0

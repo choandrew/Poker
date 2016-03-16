@@ -26,6 +26,8 @@ def deal_cards(players_remaining_in_round, the_deck):
 def check_equal(lst):
     return lst[1:] == lst[:-1]
 
+
+#defines and executes the entire betting sequence
 def betting(players_remaining_in_round, ante_value, community_cards, pot):
     current_bet = 0
     
@@ -59,6 +61,17 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
         if player.get_name() == 0:
             if (current_bet == 0):
                 rcf = input("Raise, check, or fold? (r,c,f) ").lower()
+                while True:
+                    if rcf == "r" or rcf == "raise":
+                        break
+                    elif rcf == "c" or rcf == "check":
+                        break
+                    elif rcf == "f" or rcf == "fold":
+                        break
+                    else:
+                        print("Please input a correct answer.")
+                        rcf = input("Raise, check, or fold? (r,c,f) ").lower()
+
                 if rcf == "r" or rcf == "raise":
                     print("Current bet is %s" % current_bet)
                     raised = (input("Raise to what? "))
@@ -74,7 +87,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     current_bet = raised
                    
                     player.loss(current_bet - bet_list[i])
-                    player.add_bet_this_round(current_bet - bet_list[i])
                     
                     pot += current_bet - bet_list[i]
                     bet_list[i] = current_bet
@@ -86,40 +98,38 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     del(bet_list[i])
                     del(players_remaining_in_round[i])
                     continue
-                else:
-                    pass
             
             elif (current_bet > 0):
                 rcf = input("Raise, call, or fold? (r,c,f) ").lower()
+                while True:
+                    if rcf == "r" or rcf == "raise":
+                        break
+                    elif rcf == "c" or rcf == "check":
+                        break
+                    elif rcf == "f" or rcf == "fold":
+                        break
+                    else:
+                        print("Please input a correct answer.")
+                        rcf = input("Raise, check, or fold? (r,c,f) ").lower()
                 if rcf == "r" or rcf == "raise":
                     print("Current bet is %s" % current_bet)
                     raised = (input("Raise to what? "))
-                    
                     while ((not raised.isdigit()) and int(raised) - current_bet > ante_value) :
                         print("Did not input a legal number.")
                         print("Raise must be greater than ante.")
                         print("Current bet is %s" % current_bet)
                         print("Current ante is %s" % ante_value)
                         raised = input("Raise to what? ")
-                    
                     raised = int(int(raised)/100)*100
                     current_bet = raised
-                   
                     player.loss(current_bet - bet_list[i])
-                    player.add_bet_this_round(current_bet - bet_list[i])
-                    
                     pot += current_bet - bet_list[i]
                     bet_list[i] = current_bet
 
                 if rcf == "c" or rcf == "call":
                     print("You call.")
-
-                    print(current_bet)
-                    print(bet_list[i])
-
                     player.loss(current_bet - bet_list[i])
-                    player.add_bet_this_round(current_bet - bet_list[i])
-                    
+
                     pot += current_bet - bet_list[i]
                     bet_list[i] = current_bet
 
@@ -129,14 +139,13 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                     del(players_remaining_in_round[i])
                     continue
 
+        #for AI
         else:
             amount_bet = B.bet(pot, ante_value, current_bet, player, community_cards)
-            
             if (amount_bet == -1):
                 print("Player %s folds" % player.get_name())
                 del(bet_list[i])
                 del(players_remaining_in_round[i])
-                #players_remaining_in_round.remove(player)
                 continue
             
             #check
@@ -149,7 +158,6 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                 print("Player %s raises to $%s" % (player.get_name(), current_bet))
 
                 player.loss(current_bet - bet_list[i])
-                player.add_bet_this_round(current_bet - bet_list[i])
                 print("Player %s has $%s left" %(player.get_name(), player.get_cash()))
                
                 pot += current_bet
@@ -246,6 +254,7 @@ def check_all_in(players_remaining_in_round):
             all_in = True
             break
     return all_in
+
 def game():
     
     #get number of players
