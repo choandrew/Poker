@@ -400,7 +400,7 @@ def game():
         #payout
         for winner in winner_index:
             player = players[players_remaining_in_round[winner-1].get_name()]
-            player.win(pot/len(winner_index))
+            player.win(game_state.get_pot()/len(winner_index))
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), game_state.get_pot()))
         
 
