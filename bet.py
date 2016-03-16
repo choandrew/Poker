@@ -28,7 +28,7 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
     k_tie = kelly(current_pot/2, tie_prob)
     k_win = kelly(current_pot  , win_prob)
 
-    bet_frac = (k_tie + k_win)  /3
+    bet_frac = (k_tie / 5) + (k_win)  /4
 
     bet_value = int( deceive.liar(tie_prob, win_prob) * bet_frac *player.get_cash() /100) *100
   

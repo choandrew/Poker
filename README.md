@@ -36,7 +36,7 @@ Packages everything into presentable format
 ## Dependencies
 I use the dill package and the multiprocess package for python3 from pathos.
 
-I installed using pip.
+I installed the packages using pip.
 
 ## Program Flow
 ![Program Flow](ProgramFlow.png)

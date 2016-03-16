@@ -13,6 +13,7 @@ from multiprocessing import Process, Queue
 #exact is if you want to calculate the exact value
 #given_board = [a,b,c,...] where len(given_board) = 3,4, or 5 and a,b,c are cards
 
+#uses Monte-Carlo methods
 def single_prob(hole_cards, num_iterations, given_board):
 
     if given_board == []:
@@ -71,6 +72,7 @@ def single_prob(hole_cards, num_iterations, given_board):
     return prob_functions.return_results(hole_cards, winner_list)
 
 #in this case, hole cards is just one card
+# uses multithreading to acheive better performance
 def calculate_prob(hole_cards, num_iterations, given_board):
     import itertools
     
@@ -78,7 +80,7 @@ def calculate_prob(hole_cards, num_iterations, given_board):
     from multiprocess import Pool
     import dill as pickle
 
-    #creates 4 packages
+    #creates 4 threads
     p = Pool(4)
 
     deck_cards = prob_functions.generate_deck(hole_cards)
