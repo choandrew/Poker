@@ -165,7 +165,7 @@ def betting(players_remaining_in_round, ante_value, community_cards, pot):
                 
 
         #for if everyone checks
-        if i == len(players_remaining_in_round):
+        if i == len(players_remaining_in_round) -1:
             if bet_list[0] == 0:
                 if check_equal(bet_list):
                     still_betting = False
@@ -392,7 +392,7 @@ def game():
         #payout
         for winner in winner_index:
             player = players[players_remaining_in_round[winner-1].get_name()]
-            player.win(game_state.get_pot()/len(winner_index))
+            player.win(int(game_state.get_pot()/len(winner_index)))
             print("\nPlayer %s wins the round and $%s " % (player.get_name(), game_state.get_pot()))
         
 
@@ -419,7 +419,6 @@ def game():
 
 def reset_players(players):
     for player in players:
-        player.reset_bet_this_round()
         player.empty_hand()
 
 
