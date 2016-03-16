@@ -30,4 +30,4 @@ Supports probability.py
 Packages everything into presentable format
 
 
-![Program Flow](https://www.dropbox.com/s/z2tqy80dd9y0nax/Screenshot%20from%202016-03-16%2018%3A11%3A37.png?dl=0)
+![Program Flow](ProgramFlow.png)
