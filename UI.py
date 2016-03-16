@@ -186,20 +186,20 @@ def ante(players, pot, ante_value):
     return pot
 
 
-def check_for_human_loss(players, win):
+def check_for_human_loss(players):
     for player in players:
         if player.get_name() == 0:
             if (len(players) == 1):
                 #human is only player so they won game
-                win = 1
-                return 0
+                #game over, human won
+                return (0,1)
             else:
                 #human is not only player so game is not over
-                win = 0
-                return 1
+                #(game not over, human didn't win (yet))
+                return (1,0)
     #human is not in game so they lost game
-    win = 0
-    return 0
+    #(game over, human didn't win)
+    return (0,0)
 
 #for showing player cash
 #works for both players and players_remaining_in_round
@@ -217,23 +217,12 @@ class Game_state(object):
         self.human_win  = False
         self.game       = 1
         self.round_n    = 1
-        self.pot             = 0
-    
+        self.pot        = 0
     
     
     def change_ante(self, new_ante):
         self.ante_value = new_ante
     
-    def human_win(self):
-        self.human_win = True
-    def get_human_win(self):
-        return self.human_win
-
-    def get_game(self):
-        return self.game
-    def end_game(self):
-        self.game = 0
-
     def get_round(self):
         return self.round_n
     def increment_round(self):
@@ -280,7 +269,10 @@ def game():
     #human player, making variable for ease of reference
     human = players[0]
 
-    while (game_state.get_game() == 1):
+    game = 1
+    win  = 0 
+
+    while (game == 1):
         
         if game_state.get_round() % 5 == 0:
             game_state.change_ante_value(game_state.ante_value() * 2)   
@@ -408,7 +400,7 @@ def game():
         players = player_elimination(players, ante_value)
 
         #check for human loss
-        game = check_for_human_loss(players,win)
+        (game,win) = check_for_human_loss(players)
         
         #reorder players
         reorder_players(players) 
@@ -423,8 +415,7 @@ def game():
     if (win == 1):
         print("You win!")
 
-    round_n += 1
-
+    game_state.increment_round()
 
 def reset_players(players):
     for player in players:
