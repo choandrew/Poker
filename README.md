@@ -24,12 +24,19 @@ Represents player properties and functions with name, current cash, and current 
 Calculates probability of winning a hand
 Uses Monte-Carlo methods and CPU parallelization to speed up calculation
 
+The function single\_prob uses the Monte-Carlo method, while calculate\_prob uses multithreading.
+
+
 ### prob_functions.py
 Supports probability.py
 
 ### UI
 Packages everything into presentable format
 
+## Dependencies
+I use the dill package and the multiprocess package for python3 from pathos.
+
+I installed using pip.
 
 ## Program Flow
 ![Program Flow](ProgramFlow.png)

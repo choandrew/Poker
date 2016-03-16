@@ -8,7 +8,6 @@ from multiprocessing import Process, Queue
 # instantiates data structures to hold the intermediate results of the
 # simulations, performs the simulations, and prints the results
 
-
 #hole_cards =((a,b),(c,d),...) where a,b,c,d,... are cards
 #num_iterations is the number of monte carlo simulations
 #exact is if you want to calculate the exact value
@@ -74,9 +73,12 @@ def single_prob(hole_cards, num_iterations, given_board):
 #in this case, hole cards is just one card
 def calculate_prob(hole_cards, num_iterations, given_board):
     import itertools
+    
+    #must pip these library
     from multiprocess import Pool
     import dill as pickle
 
+    #creates 4 packages
     p = Pool(4)
 
     deck_cards = prob_functions.generate_deck(hole_cards)
