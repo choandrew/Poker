@@ -30,7 +30,6 @@ Supports probability.py
 ### UI
 Packages everything into presentable format
 
-\\
 
 ## Program Flow
 ![Program Flow](ProgramFlow.png)
