@@ -2,8 +2,7 @@ import scipy
 import deceive
 import probability
 
-# f* = (bp-q)/b = (p(b+1) - 1) / b
-
+# KELLY CRITERION: f* = (bp-q)/b = (p(b+1) - 1) / b
 """
     f* is the fraction of the current bankroll to wager, i.e. how much to bet;
     b is the net odds received on the wager
@@ -15,7 +14,8 @@ import probability
 def kelly(b,p):
     return ((p*(b+1) - 1) / float(b))
 
-#calculate probability here
+
+#amount bet
 def bet(current_pot,ante_value,current_bet, player,given_board):
     hand = player.get_hand()
     cards = (hand, )
@@ -28,7 +28,7 @@ def bet(current_pot,ante_value,current_bet, player,given_board):
     k_tie = kelly(current_pot/2, tie_prob)
     k_win = kelly(current_pot  , win_prob)
 
-    bet_frac = (k_tie / 5) + (k_win)  /4
+    bet_frac = (k_tie + k_win)/5
 
     bet_value = int( deceive.liar(tie_prob, win_prob) * bet_frac *player.get_cash() /100) *100
   
